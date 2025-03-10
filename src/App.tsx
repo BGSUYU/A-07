@@ -1,26 +1,17 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+// import { Layout , Button , Menu , theme} from 'antd';
+// import 'antd/dist/reset.css';
+import { Route,Routes,BrowserRouter as Router } from "react-router-dom";
+import Main from "./pages/Main";
+import AI from './pages/AI'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default function Mylayout() {
+    return (
+        <div>
+            <Routes>
+                <Route path="/" element={<Main />}/>
+                <Route path="/AI" element={<AI />}/>
+            </Routes>
+        </div>
+    );
 }
-
-export default App;
