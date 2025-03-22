@@ -4,6 +4,8 @@ import React from "react";
 import { Route,Routes,BrowserRouter as Router } from "react-router-dom";
 import Main from "./pages/Main";
 import AI from './pages/AI'
+import SubmitPage from "./pages/SubmitPage";
+import Introduce from "./pages/Introduce"
 
 export default function Mylayout() {
     return (
@@ -11,6 +13,8 @@ export default function Mylayout() {
             <Routes>
                 <Route path="/" element={<Main />}/>
                 <Route path="/AI" element={<AI />}/>
+                <Route path="/SubmitPage" element={<SubmitPage />}/>
+                <Route path="/Introduce" element={<Introduce />}/>
             </Routes>
         </div>
     );

@@ -1,0 +1,1 @@
+INSERT INTO A07 (name,testnum,phonenum,email) VALUES (?,?,?,?);

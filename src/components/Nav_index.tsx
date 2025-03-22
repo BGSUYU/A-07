@@ -1,7 +1,6 @@
 import React from "react";
-import { Link,Route,Routes,BrowserRouter as Router } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "antd";
-import AI from "../pages/AI";
 
 const styles = {
     display: "flex",
@@ -28,13 +27,13 @@ export default function NavIndex() {
                 onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
                 onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
                 >
-                    <Link to='/introduce' className="Link" style={{
+                    <Link to='/Introduce' className="Link" style={{
                         fontSize:'15px',
                         padding:'5px',
                         paddingBottom:'5px',
                         paddingTop:'5px'
                         }}>
-                        介绍</Link>
+                        模型介绍</Link>
                 </Button>
                 <Button type="primary" style={{
                     borderRadius:'15px',
@@ -61,13 +60,13 @@ export default function NavIndex() {
                 onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
                 onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
                 >
-                    <Link to='API' className="Link" style={{
+                    <Link to='SubmitPage' className="Link" style={{
                         fontSize:'15px',
                         padding:'5px',
                         paddingBottom:'5px',
                         paddingTop:'5px'
                         }}>
-                        API</Link>
+                        照片提交</Link>
                 </Button> 
             </div>
 
