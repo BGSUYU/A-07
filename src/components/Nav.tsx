@@ -16,6 +16,7 @@ export default function Nav(){
                 flexDirection:'row',
                 justifyContent:'space-between',
                 position:'sticky',
+                zIndex:'1',
                 top:'0',
                 backgroundColor:'rgb(217, 223, 255)',
                 padding:'10px'

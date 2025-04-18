@@ -2,7 +2,9 @@ import React from "react";
 
 interface props{
     text:string,
-    h1:string
+    h1:string,
+    backgroundgradient:string,
+    backgroundimage:string
 }
 
 export default function MessageMain(props:props){
@@ -10,13 +12,15 @@ export default function MessageMain(props:props){
         <div className="MessageMain" style={{
             display:'flex',
             alignItems:'center',
-            backgroundColor:'rgb(230, 229, 229)',
+            // backgroundColor:'rgb(230, 229, 229)',
+            background:props.backgroundgradient,
             flexDirection:'column',
             height:'480px',
         }}>
             <h1 style={{
                 marginBottom:'63px'
-            }}> {props.h1} </h1>
+            }}> {props.h1} 
+            </h1>
             <div className="MessageBoard" style={{
                 display:'flex',
                 width:'60%',
@@ -30,9 +34,15 @@ export default function MessageMain(props:props){
                      display:'flex',
                      marginTop:'30px',
                      marginLeft:'5%',
-                     width:"40%",
+                     width:"45%",
                      height:"240px",
-                     backgroundColor:"rgb(104, 103, 103)"
+                     backgroundColor:"rgb(107, 107, 107)",
+                     backgroundImage:`url(${props.backgroundimage})`,
+                     backgroundSize: 'cover',
+                     backgroundPosition: 'center',
+                     backgroundRepeat: 'no-repeat',
+                     borderRadius:'10px',
+                     boxShadow:'-10px 10px 10px rgba(124, 124, 124, 0.5)'
                 }}>
                     <img style={{
                     }}
@@ -41,11 +51,25 @@ export default function MessageMain(props:props){
                     />
                 </div> 
                 <div style={{
+                    display:'flex',
+                    flexDirection:'column',
                     width:"50%",
                     marginTop:'30px',
-                    backgroundColor:'rgb(165, 164, 164)'
+                    backgroundColor:'rgb(165, 164, 164)',
+                    alignItems:'center',
+                    justifyContent:'center',
+                    marginBottom:'30px',
+                    position:'relative',
+                    left:'60px',
+                    borderRadius:'10px',
+                    background:'linear-gradient(to bottom right, rgba(213, 215, 252, 0.8),10%, rgb(255, 255, 255))',
+                    boxShadow:'10px 10px 10px rgba(187, 187, 187, 0.5)'
                 }}>
-                    {props.text}
+                    <div style={{
+                        paddingLeft:'20px'
+                    }}>
+                        {props.text}
+                    </div>
                 </div>
             </div>
         </div>

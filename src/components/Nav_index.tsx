@@ -5,6 +5,7 @@ import { Button } from "antd";
 const styles = {
     display: "flex",
     justifyContent: "center",
+    // background:''
 };
 
 // interface style_0{
