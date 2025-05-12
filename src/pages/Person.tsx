@@ -6,6 +6,8 @@ import { Collapse } from 'antd';
 import {PersonChildren,PersonChildrenOCT} from "../components/PersonChildren";
 import axios from "axios";
 import {tag} from "../App"
+import RegisterForm from "../components/Register";
+import LoginForm from '../components/Login';
 
 // import InfiniteScroll from 'react-infinite-scroll-component';
 class itemChildren {
@@ -62,6 +64,8 @@ const dataOCT = [
 
 
 export default function Person(){
+    const ShowRegister = useContext(tag);
+    const ShowLogin = useContext(tag);
     async function download() {
         try{
             const response = await axios.get('http://localhost:20000/api/downloadfile',{
@@ -97,13 +101,58 @@ export default function Person(){
         marginLeft:'0px',
         marginTop:'10px',
     }
+    const [isdata,setdata] = useState([
+        {
+            key: '1',
+            label: '测试编号：1',
+            children: <PersonChildren dataEyes={data[0]} numberEyes="1" typeOfEyes="正常" imgEyes='/1.png' imageEyes="彩色眼底图片"/>,
+          },
+          {
+            key: '2',
+            label: '测试编号：4338',
+            children: <PersonChildren dataEyes={data[1]} numberEyes="4338" typeOfEyes="糖尿病" imgEyes='/305.jpg' imageEyes="彩色眼底图片"/>,
+          },
+          {
+            key: '3',
+            label: '测试编号：305',
+            children: <PersonChildren dataEyes={data[2]} numberEyes="305" typeOfEyes="糖尿病、高血压、其他疾病/异常" imgEyes='/4338.png' imageEyes="彩色眼底图片"/>,
+          },
+          {
+            key: '4',
+            label: '测试编号：4401',
+            children:<PersonChildrenOCT dataEyes={dataOCT[0]} numberEyes="4401" typeOfEyes="Normal" imgEyes='/4401.png' imageEyes="OCT图片"/>,
+          },
+          {
+              key: '5',
+              label: '测试编号：5573',
+              children:<PersonChildrenOCT dataEyes={dataOCT[1]} numberEyes="5573" typeOfEyes="Diabetic retinopathy" imgEyes='/5573.png' imageEyes="OCT图片"/>,
+          },
+        // key:'',
+        // label:'',
+        // children:<></>, // Initialize with an empty ReactNode
+    ]);
 
-    const [isdata,setdata] = useState([]);
     useEffect(()=>{
         fetch('/data.json')
         .then((response) => response.json())
-        .then((data) => {
-            setdata(data);
+        .then((dataJSON) => {
+            const newItems = dataJSON.map((item: { key: any; label: any; }) => ({
+                key: item.key,
+                label: item.label,
+                children: (
+                    <PersonChildren 
+                        dataEyes={data[0]} 
+                        numberEyes="4338" 
+                        typeOfEyes="糖尿病" 
+                        imgEyes='/305.jpg' 
+                        imageEyes="彩色眼底图片"
+                    />
+                ),
+            }));
+
+            setdata([...isdata, ...newItems])
+            
+            console.log(dataJSON[0].key);
         })
         .catch(error => {
             console.error('Error fetching data:', error);
@@ -114,34 +163,13 @@ export default function Person(){
     //   };
     //   console.log(data[0])
 
-    const items: CollapseProps['items'] = 
-    [
-        {
-          key: '1',
-          label: '测试编号：1',
-          children: <PersonChildren dataEyes={data[0]} numberEyes="1" typeOfEyes="正常" imgEyes='/1.png' imageEyes="彩色眼底图片"/>,
-        },
-        {
-          key: '2',
-          label: '测试编号：4338',
-          children: <PersonChildren dataEyes={data[1]} numberEyes="4338" typeOfEyes="糖尿病" imgEyes='/305.jpg' imageEyes="彩色眼底图片"/>,
-        },
-        {
-          key: '3',
-          label: '测试编号：305',
-          children: <PersonChildren dataEyes={data[2]} numberEyes="305" typeOfEyes="糖尿病、高血压、其他疾病/异常" imgEyes='/4338.png' imageEyes="彩色眼底图片"/>,
-        },
-        {
-          key: '4',
-          label: '测试编号：4401',
-          children:<PersonChildrenOCT dataEyes={dataOCT[0]} numberEyes="4401" typeOfEyes="Normal" imgEyes='/4401.png' imageEyes="OCT图片"/>,
-        },
-        {
-            key: '5',
-            label: '测试编号：5573',
-            children:<PersonChildrenOCT dataEyes={dataOCT[1]} numberEyes="5573" typeOfEyes="Diabetic retinopathy" imgEyes='/5573.png' imageEyes="OCT图片"/>,
-        }
-    ];
+    // console.log(isdata)
+
+    // const items: CollapseProps['items'] = 
+    // [
+
+    // ];
+
     // class CollapseItem {
     //     key: string;
     //     label: string;
@@ -167,49 +195,54 @@ export default function Person(){
     // }
     return(
         <div>
-            <Nav/>
-            <div style={{
-                display:'flex',
-                flexDirection:'row',
-                justifyContent:'space-between',
-                marginTop:'30px',
-                }}>
+            {ShowRegister?.IsShowRegister ? <RegisterForm /> : <></>}
+            {ShowLogin?.IsShowLogin ? <LoginForm /> : <></>}
+            {/* <RegisterForm/> */}
+            <div>
+                <Nav/>
                 <div style={{
                     display:'flex',
-                    flexDirection:'column',
-                    width:'20%',
-                    height:'80vh',
-                    backgroundColor:'#f0f2f5',
-                    paddingTop:'20px',
-                    borderRadius:'10px',
-                    boxShadow:'0 0 10px rgba(0, 0, 0, 0.48)',
-                }}>
+                    flexDirection:'row',
+                    justifyContent:'space-between',
+                    marginTop:'30px',
+                    }}>
                     <div style={{
                         display:'flex',
                         flexDirection:'column',
-                        alignItems:'center',
-                        marginBottom:'20px',}}>
-                        <img style={{height:'200px',
-                                    width:'200px',
-                                    objectFit:'cover',
-                                    borderRadius:'50%',
-                                    boxShadow:'0 0 10px rgb(0, 0, 0)',
-                                    }} src="/header.png" alt="" />{/*头像(可以使用div换backimg)*/}
+                        width:'20%',
+                        height:'80vh',
+                        backgroundColor:'#f0f2f5',
+                        paddingTop:'20px',
+                        borderRadius:'10px',
+                        boxShadow:'0 0 10px rgba(0, 0, 0, 0.48)',
+                    }}>
+                        <div style={{
+                            display:'flex',
+                            flexDirection:'column',
+                            alignItems:'center',
+                            marginBottom:'20px',}}>
+                            <img style={{height:'200px',
+                                        width:'200px',
+                                        objectFit:'cover',
+                                        borderRadius:'50%',
+                                        boxShadow:'0 0 10px rgb(0, 0, 0)',
+                                        }} src="/header.png" alt="" />{/*头像(可以使用div换backimg)*/}
+                        </div>
+                        <ul style={ul_style}>用户名:BG</ul>
+                        <ul style={ul_style}>账号:19357394830</ul>
+                        <ul style={ul_style}>邮箱:19357394830@163.com</ul>
+                        <ul style={ul_style}>手机号:19357394830</ul>
                     </div>
-                    <ul style={ul_style}>用户名:BG</ul>
-                    <ul style={ul_style}>账号:19357394830</ul>
-                    <ul style={ul_style}>邮箱:19357394830@163.com</ul>
-                    <ul style={ul_style}>手机号:19357394830</ul>
-                </div>
-                <div style={{
-                    display:'flex',
-                    flexDirection:'column',
-                    justifyContent:'space-between',
-                    alignItems:'flexEnd',
-                    width:'70%',
-                }}>
-                    <Collapse accordion style={{width:'100%',marginBottom:'30px'}} items={items} defaultActiveKey={['1']}  />
-                    <Button style={{width:'100px'}} onClick={download}>导出为txt</Button>
+                    <div style={{
+                        display:'flex',
+                        flexDirection:'column',
+                        justifyContent:'space-between',
+                        alignItems:'flexEnd',
+                        width:'70%',
+                    }}>
+                        <Collapse accordion style={{width:'100%',marginBottom:'30px'}} items={isdata} defaultActiveKey={['1']}  />
+                        <Button style={{width:'100px'}} onClick={download}>导出为txt</Button>
+                    </div>
                 </div>
             </div>
         </div>

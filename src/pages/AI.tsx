@@ -3,10 +3,13 @@ import type { ConversationsProps } from '@ant-design/x';
 import { theme , type GetProp} from 'antd'
 import { Button,message} from 'antd';
 import { CloudUploadOutlined, LinkOutlined,UserOutlined } from '@ant-design/icons';
-import React, {useState} from 'react'
+import React, {useContext, useState} from 'react'
 import axios from 'axios'
 import markdownit from 'markdown-it';
 import Nav from '../components/Nav';
+import RegisterForm from '../components/Register';
+import LoginForm from '../components/Login';
+import {tag} from "../App"
 
 const roles: GetProp<typeof Bubble.List, 'roles'> = {
     ai: {
@@ -22,7 +25,8 @@ const roles: GetProp<typeof Bubble.List, 'roles'> = {
   };
 
 export default function AI(){
-
+    const ShowRegister = useContext(tag);
+    const ShowLogin = useContext(tag);
     // const { message } = App.useApp();
 
     const {token}=theme.useToken();
@@ -98,103 +102,109 @@ export default function AI(){
     }
     
     return(
-        <div style={{
-            // overflow:'hidden',
-            height:'100%',
-        }}>
-            <Nav/>
-            <div style={
-                {
-                    display:'flex',
-                    flexDirection:'row',
-                    justifyContent:'space-between',
-                    maxHeight:'90vh',
-                }
-            }>
-                {contextHolder}
+        <div>
+            {ShowRegister?.IsShowRegister ? <RegisterForm /> : <></>}
+            {ShowLogin?.IsShowLogin ? <LoginForm /> : <></>}
+            {/* <RegisterForm/> */}
+            <div style={{
+                // overflow:'hidden',
+                height:'100%',
+            }}>
+                <Nav/>
                 <div style={
                     {
-                        // backgroundColor:'rgb(177, 176, 176)'
-                        // height:'100vh'
-                        // position:'fixed',
-                        // top:'50px',
-                    }
-                }>            
-                    <Conversations items={items} defaultActiveKey="item1" style={style_conversation}  />
-                </div>
-                <div 
-                style={{
-                    width:"960px",
-                    display:'flex',
-                    flexDirection:'column',
-                    justifyContent:'space-between',
-                }}>
-                    <div>
-                    <h1 style={{
                         display:'flex',
-                        justifyContent:'center',
-                        marginBottom:0,
-                        fontSize:'25px'
-                    }}>
-                        {H1}
-                    </h1>
-                        <Bubble.List 
-                        roles={roles}
-                        style={{ 
-                            maxHeight: '70vh',
-                            marginBottom:'20px',
-                            marginTop:'40px',
-                            overflowY:'scroll'
-                        }}
-                        items={messages.map(({ id, message, status }) => ({
-                            key: id,
-                            role: status === 'local' ? 'local' : 'ai',
-                            content: <div dangerouslySetInnerHTML={{ __html: message }} />,
-                        }))}
-                        />
+                        flexDirection:'row',
+                        justifyContent:'space-between',
+                        maxHeight:'90vh',
+                    }
+                }>
+                    {contextHolder}
+                    <div style={
+                        {
+                            // backgroundColor:'rgb(177, 176, 176)'
+                            // height:'100vh'
+                            // position:'fixed',
+                            // top:'50px',
+                        }
+                    }>            
+                        <Conversations items={items} defaultActiveKey="item1" style={style_conversation}  />
                     </div>
-                    <div>
-                        <Sender
-                            loading={agent.isRequesting()}
-                            value={content}
-                            onChange={setContent}
-                            onSubmit={(nextContent) => {
-                            setH1(nextContent);
-                            setLoading(true);
-                            messageApi.open({
-                                    type:'info',
-                                    content: 'This is a success message',
-                                }
-                            );
-                            onRequest(nextContent);
-                            setContent('');
+                    <div 
+                    style={{
+                        width:"960px",
+                        display:'flex',
+                        flexDirection:'column',
+                        justifyContent:'space-between',
+                    }}>
+                        <div>
+                        <h1 style={{
+                            display:'flex',
+                            justifyContent:'center',
+                            marginBottom:0,
+                            fontSize:'25px'
+                        }}>
+                            {H1}
+                        </h1>
+                            <Bubble.List 
+                            roles={roles}
+                            style={{ 
+                                maxHeight: '70vh',
+                                marginBottom:'20px',
+                                marginTop:'40px',
+                                overflowY:'scroll'
                             }}
-                            onCancel={() => {
-                            setLoading(false);
-                            messageApi.error('Cancel sending!');
-                            }}
-                            style={
-                                {
-                                    marginBottom:'20px'
+                            items={messages.map(({ id, message, status }) => ({
+                                key: id,
+                                role: status === 'local' ? 'local' : 'ai',
+                                content: <div dangerouslySetInnerHTML={{ __html: message }} />,
+                            }))}
+                            />
+                        </div>
+                        <div>
+                            <Sender
+                                loading={agent.isRequesting()}
+                                value={content}
+                                onChange={setContent}
+                                onSubmit={(nextContent) => {
+                                setH1(nextContent);
+                                setLoading(true);
+                                messageApi.open({
+                                        type:'info',
+                                        content: 'This is a success message',
+                                    }
+                                );
+                                onRequest(nextContent);
+                                setContent('');
+                                }}
+                                onCancel={() => {
+                                setLoading(false);
+                                messageApi.error('Cancel sending!');
+                                }}
+                                style={
+                                    {
+                                        marginBottom:'20px'
+                                    }
                                 }
-                            }
-                            prefix={
-                            <Attachments
-                                beforeUpload={() => false}
-                                onChange={({ file }) => {
-                                message.info(`Mock upload: ${file.name}`);
-                                }}
-                                placeholder={{
-                                icon: <CloudUploadOutlined />,
-                                }}
-                            >
-                                <Button type="text" icon={<LinkOutlined />} />
-                            </Attachments>
-                            }
-                        />
+                                prefix={
+                                <Attachments
+                                    beforeUpload={() => false}
+                                    onChange={({ file }) => {
+                                    message.info(`Mock upload: ${file.name}`);
+                                    }}
+                                    placeholder={{
+                                    icon: <CloudUploadOutlined />,
+                                    }}
+                                >
+                                    <Button type="text" icon={<LinkOutlined />} />
+                                </Attachments>
+                                }
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     )
+    
 }

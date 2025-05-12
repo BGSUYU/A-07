@@ -25,7 +25,7 @@ async function getConnection(){
     });
 }
 
-export async function insert(data){
+export async function insertphotomessage(data){
     try{
         const connect = await getConnection();
         // console.log('成功在数据池获取连接');
@@ -45,5 +45,46 @@ export async function insert(data){
     }
     catch(err){
         console.error('插入失败',err);
+    }
+}
+
+export async function insertusermessage(username,password){
+    try{
+        const connect = await getConnection();
+        const sql_insert = await fs_SQL('./SQL/INSERTUSER.sql');
+        connect.query(sql_insert,[username,password],(err, result) => {
+            if(err){
+                console.log(err,'插入失败');
+            }
+            else{
+                console.log(result);
+                console.log('插入成功');
+            }
+        });
+        connect.release();
+    }
+    catch(err){
+        console.error('插入失败',err);
+    }
+}
+
+export async function checkusermessage(username){
+    try{
+        const connect = await getConnection();
+        const sql_check = await fs_SQL('./SQL/SELECTUSER.sql');
+        connect.query(sql_check,username,(err, result) => {
+            if(err){
+                console.log(err,'查询失败');
+            }
+            else{
+                console.log(result);
+                console.log('查询成功');
+            }
+            return result;
+        });
+        connect.release();
+    }
+    catch(err){
+        console.error('查询失败',err);
     }
 }

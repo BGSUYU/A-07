@@ -1,12 +1,32 @@
-import React, { useState,MouseEvent,useEffect, useContext } from "react";
+import React, { useState,MouseEvent,useEffect, useContext, useCallback } from "react";
 import Nav from "../components/Nav";
 import { Input,Checkbox } from "antd";
 import axios from "axios";
 import {FileAddOutlined,CloseOutlined,FileZipOutlined} from '@ant-design/icons'
 import { truncate } from "fs";
 import { tag } from "../App";
+import RegisterForm from "../components/Register";
+import LoginForm from '../components/Login';
+
+function debounce(func:any,wait:number):Function{
+
+    let timeout: ReturnType<typeof setTimeout>;
+    return function(this:any,...args: any[]){
+        let context = this;
+
+        if(timeout) {
+            clearTimeout(timeout)
+            alert('请不要多次提交')
+        }
+        timeout = setTimeout(()=>{
+            func.apply(context,args)
+        },wait)
+    }
+}//防抖操作的实现
 
 export default function SubmitPage() {
+    const ShowRegister = useContext(tag);
+    const ShowLogin = useContext(tag);
     const [imgdata,setimgdata] = React.useState({
         name:'',
         testnum:'',
@@ -306,41 +326,76 @@ export default function SubmitPage() {
           }
     }
     const count = useContext(tag);
+    const debouncedSubmitdata = debounce(Submitdata, 10000);
+    const debouncedSubmit = useCallback(debouncedSubmitdata, []);
 
     return (
-        <div style={{
-            display:'flex',
-            flexDirection:'column',
-            background:'linear-gradient(to bottom right, rgb(201, 217, 251),2%,rgb(235, 239, 255),rgb(201, 217, 251))',
-            paddingBottom:'50px'
-        }}>
-            <Nav/>
+        <div>
+            {ShowRegister?.IsShowRegister ? <RegisterForm /> : <></>}
+            {ShowLogin?.IsShowLogin ? <LoginForm /> : <></>}
+            {/* <RegisterForm/> */}
             <div style={{
-                marginTop:'40px',
                 display:'flex',
-                flexDirection:'row',
-                justifyContent:'space-around'
+                flexDirection:'column',
+                background:'linear-gradient(to bottom right, rgb(201, 217, 251),2%,rgb(235, 239, 255),rgb(201, 217, 251))',
+                paddingBottom:'50px'
             }}>
+                <Nav/>
                 <div style={{
+                    marginTop:'40px',
                     display:'flex',
-                    flexDirection:'column',
-                    minHeight:'600px',
-                    width:'40%',
-                    justifyContent:'space-around',
-                    // marginTop:'50px'
+                    flexDirection:'row',
+                    justifyContent:'space-around'
                 }}>
-                    <header>
-                        PS：当同时选择OCT模式与彩色眼底模式的时候，只能上传各一张图片，而彩色眼底可以上传左右眼各一张图片
-                    </header>
-                    <label htmlFor="OCT">
-                        <input type="file" id="OCT" onChange={(e)=>{handlefile1(e)}} disabled={(!isCheckboxOCT && !isCheckboxColour)} accept=".jpg,.png,.zip" style={{
-                            display:'none',
+                    <div style={{
+                        display:'flex',
+                        flexDirection:'column',
+                        minHeight:'600px',
+                        width:'40%',
+                        justifyContent:'space-around',
+                        // marginTop:'50px'
+                    }}>
+                        <header>
+                            PS：当同时选择OCT模式与彩色眼底模式的时候，只能上传各一张图片，而彩色眼底可以上传左右眼各一张图片
+                        </header>
+                        <label htmlFor="OCT">
+                            <input type="file" id="OCT" onChange={(e)=>{handlefile1(e)}} disabled={(!isCheckboxOCT && !isCheckboxColour)} accept=".jpg,.png,.zip" style={{
+                                display:'none',
+                            }}/>
+                            <div style={labelstyleOCT}>
+                                {/* <img src="" alt="眼睛图片"/> */}
+                                {
+                                    ((isCheckboxColour||isCheckboxOCT)) ? ((Isinput1)?(''):((Iszip)?(<FileZipOutlined style={{
+                                        fontSize:'50px'}} />):(                                   
+                                        <FileAddOutlined style={{
+                                                fontSize:'50px'
+                                                }}
+                                            ></FileAddOutlined>)
+                                        )):(
+                                            <CloseOutlined style={{
+                                                fontSize:'50px'
+                                                }}
+                                            ></CloseOutlined>
+                                        )
+                                }
+                            </div>
+                        </label>
+                        <label htmlFor="colour">
+                        <input type="file" id="colour" onChange={(e)=>{handlefile2(e)}} disabled={!isCheckboxColour} accept=".jpg,.png,.zip" style={{
+                                display:'none',
                         }}/>
-                        <div style={labelstyleOCT}>
-                            {/* <img src="" alt="眼睛图片"/> */}
-                            {
-                                ((isCheckboxColour||isCheckboxOCT)) ? ((Isinput1)?(''):((Iszip)?(<FileZipOutlined style={{
-                                    fontSize:'50px'}} />):(                                   
+                            <div style={labelstyleColour}>
+                                {/* display:'flex',
+                                justifyContent:'center',
+                                backgroundColor:'white',
+                                height:'200px',
+                                borderRadius:'5px',
+                                boxShadow:'1px 1px 5px 5px rgb(141, 141, 141)',
+                                cursor:'pointer'
+                                */}
+                                { isCheckboxColour ? ((Isinput2)?(''):((Iszip)?(<FileZipOutlined style={{
+                                    fontSize:'50px'
+                                }} />):(                                    
                                     <FileAddOutlined style={{
                                             fontSize:'50px'
                                             }}
@@ -351,100 +406,74 @@ export default function SubmitPage() {
                                             }}
                                         ></CloseOutlined>
                                     )
-                            }
+                                }
+                                {/* <img src="" alt="彩色眼底"/> */}
+                            </div>
+                        </label>
+                        <div>
+                            <Checkbox onChange={(e)=>{
+                                handlecheckboxOCT()
+                            }}>OCT</Checkbox> 
+                            {/* 使用onchange */}
+                            <Checkbox onChange={(e)=>{
+                                handlecheckboxColour()
+                            }}>彩色眼底</Checkbox>
+                            {/* 图片提交 */}
                         </div>
-                    </label>
-                    <label htmlFor="colour">
-                    <input type="file" id="colour" onChange={(e)=>{handlefile2(e)}} disabled={!isCheckboxColour} accept=".jpg,.png,.zip" style={{
-                            display:'none',
-                    }}/>
-                        <div style={labelstyleColour}>
-                            {/* display:'flex',
-                            justifyContent:'center',
-                            backgroundColor:'white',
-                            height:'200px',
-                            borderRadius:'5px',
-                            boxShadow:'1px 1px 5px 5px rgb(141, 141, 141)',
-                            cursor:'pointer'
-                             */}
-                            { isCheckboxColour ? ((Isinput2)?(''):((Iszip)?(<FileZipOutlined style={{
-                                fontSize:'50px'
-                            }} />):(                                    
-                                <FileAddOutlined style={{
-                                        fontSize:'50px'
-                                        }}
-                                    ></FileAddOutlined>)
-                                )):(
-                                    <CloseOutlined style={{
-                                        fontSize:'50px'
-                                        }}
-                                    ></CloseOutlined>
-                                )
-                            }
-                            {/* <img src="" alt="彩色眼底"/> */}
-                        </div>
-                    </label>
-                    <div>
-                        <Checkbox onChange={(e)=>{
-                            handlecheckboxOCT()
-                        }}>OCT</Checkbox> 
-                        {/* 使用onchange */}
-                        <Checkbox onChange={(e)=>{
-                            handlecheckboxColour()
-                        }}>彩色眼底</Checkbox>
-                        {/* 图片提交 */}
+                    </div>
+                    <div style={{
+                        width:'40%',
+                        display:'flex',
+                        flexDirection:'column',
+                        justifyContent:'space-around'
+                    }}>
+                        <Input value={imgdata.name} onChange={handledataName} placeholder="请输入你的姓名" />
+                        <Input value={imgdata.testnum} onChange={handledataTestnum} placeholder="请输入你的测试编号"/>
+                        <Input value={imgdata.phonenum} onChange={handledataPhonenum} placeholder="请输入你的手机号"/>
+                        <Input value={imgdata.email} onChange={handledataEmail} placeholder="请输入你的邮箱"/>
+                        {/* 姓名、身份证号、手机号、邮箱 
+                            测试编号可以使用手机发送验证码方式*/}
                     </div>
                 </div>
-                <div style={{
-                    width:'40%',
+                <div
+                style={{
                     display:'flex',
-                    flexDirection:'column',
-                    justifyContent:'space-around'
+                    justifyContent:"center",
+                    alignItems:'center'
                 }}>
-                    <Input value={imgdata.name} onChange={handledataName} placeholder="请输入你的姓名" />
-                    <Input value={imgdata.testnum} onChange={handledataTestnum} placeholder="请输入你的测试编号"/>
-                    <Input value={imgdata.phonenum} onChange={handledataPhonenum} placeholder="请输入你的手机号"/>
-                    <Input value={imgdata.email} onChange={handledataEmail} placeholder="请输入你的邮箱"/>
-                    {/* 姓名、身份证号、手机号、邮箱 
-                        测试编号可以使用手机发送验证码方式*/}
-                </div>
-            </div>
-            <div
-            style={{
-                display:'flex',
-                justifyContent:"center",
-                alignItems:'center'
-            }}>
-                <button 
-                onClick={(e)=>{
-                    Submitdata(e)
-                        setimgdata({
-                            name:'',
-                            testnum:'',
-                            phonenum:'',
-                            email:''
-                        })
-                        if (count) {
-                            count.setcount(count.iscount + 1);
+                    <button 
+                    onClick={(e)=>{
+
+                        debouncedSubmit();
+
+                            setimgdata({
+                                name:'',
+                                testnum:'',
+                                phonenum:'',
+                                email:''
+                            })
+                            if (count) {
+                                count.setcount(count.iscount + 1);
+                            }//用于demo而且是usecontext的使用(现已弃用因为使用JSON对象文件实现展示)                        
                         }
                     }
-                }
-                style={{
-                    height:'50px',
-                    width:'150px',
-                    fontSize:'20px',
-                    border:'solid 1px',
-                    borderColor:'rgb(154, 184, 255)',
-                    borderRadius:'20px',
-                    backgroundColor:isHovered ? 'rgb(200, 216, 253)':'white',
-                    color:isHovered ? 'white':'rgb(165, 192, 255)',
-                    transition:'background-color 1s ease,color 1s ease',
-                    cursor:'pointer',
-                }}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                >Submit</button>
-                {/*提交事件*/}
+                    style={{
+                        height:'50px',
+                        width:'150px',
+                        fontSize:'20px',
+                        border:'solid 1px',
+                        borderColor:'rgb(154, 184, 255)',
+                        borderRadius:'20px',
+                        backgroundColor:isHovered ? 'rgb(200, 216, 253)':'white',
+                        color:isHovered ? 'white':'rgb(165, 192, 255)',
+                        transition:'background-color 1s ease,color 1s ease',
+                        cursor:'pointer',
+                    }}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    >Submit</button>
+                    {/*提交事件*/}
+                </div>
             </div>
         </div>
     );

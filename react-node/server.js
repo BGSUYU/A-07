@@ -1,11 +1,13 @@
 import express from 'express'
 import cors from 'cors'
 import AIchat from './AIchat.js'
-import {insert} from './db.js'
+import {insertphotomessage} from './db.js'
+import { register } from './register.js'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { login } from './login.js'
 const server = express();
 const PORT = 20000;
 
@@ -30,8 +32,27 @@ server.post('/api/submit',async (req,res)=>{
 server.post('/api/submitdata',async(req,res)=>{
     const {data} = req.body;
     console.log(`Received data: Success = ${data}`)
-    await insert(data)
+    await insertphotomessage(data)
 })//插入数据库数据
+
+server.post('/api/register',async(req,res)=>{
+    const {username,password} = req.body;
+    await register(username,password)
+    .catch((err)=>{
+        console.log(err)
+        res.status(500).json({error:'注册失败'})
+    })
+})
+
+server.post('/api/login',async(req,res)=>{
+    const {username,password} = req.body;
+    const token = await login(username,password)
+    .catch((err)=>{
+        console.log(err)
+        res.status(500).json({error:'登录失败'})
+    })
+    res.json({token})
+})
 
 server.get('/api/getdata',async(req,res)=>{
     
