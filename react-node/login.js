@@ -1,6 +1,6 @@
 import {checkusermessage} from './db.js'
-import {bcrypt} from 'bcryptjs'
-import {jwt} from 'jsonwebtoken'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 
 export async function login(username,password){
     try{

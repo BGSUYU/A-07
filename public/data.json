@@ -1,57 +1,26 @@
 [
     {
-      "key": "1",
+      "key": "6",
       "label": "测试编号：1",
-      "children": {
-        "dataEyes": "data[0]",
-        "numberEyes": "1",
-        "typeOfEyes": "正常",
-        "imgEyes": "/1.png",
-        "imageEyes": "彩色眼底图片"
-      }
+      "numberEyes":"4338",
+      "typeOfEyes":"糖尿病",
+      "imgEyes":"/305.jpg",
+      "imageEyes":"彩色眼底图片"
     },
     {
-      "key": "2",
-      "label": "测试编号：4338",
-      "children": {
-        "dataEyes": "data[1]",
-        "numberEyes": "4338",
-        "typeOfEyes": "糖尿病",
-        "imgEyes": "/305.jpg",
-        "imageEyes": "彩色眼底图片"
-      }
+      "key": "7",
+      "label": "测试编号：2",
+      "numberEyes":"4338",
+      "typeOfEyes":"糖尿病",
+      "imgEyes":"/305.jpg",
+      "imageEyes":"彩色眼底图片"
     },
     {
-      "key": "3",
-      "label": "测试编号：305",
-      "children": {
-        "dataEyes": "data[2]",
-        "numberEyes": "305",
-        "typeOfEyes": "糖尿病、高血压、其他疾病/异常",
-        "imgEyes": "/4338.png",
-        "imageEyes": "彩色眼底图片"
-      }
-    },
-    {
-      "key": "4",
-      "label": "测试编号：4401",
-      "children": {
-        "dataEyes": "dataOCT[0]",
-        "numberEyes": "4401",
-        "typeOfEyes": "Normal",
-        "imgEyes": "/4401.png",
-        "imageEyes": "OCT图片"
-      }
-    },
-    {
-      "key": "5",
-      "label": "测试编号：5573",
-      "children": {
-        "dataEyes": "dataOCT[1]",
-        "numberEyes": "5573",
-        "typeOfEyes": "Diabetic retinopathy",
-        "imgEyes": "/5573.png",
-        "imageEyes": "OCT图片"
-      }
+      "key": "8",
+      "label": "测试编号：3",
+      "numberEyes":"4338",
+      "typeOfEyes":"糖尿病",
+      "imgEyes":"/305.jpg",
+      "imageEyes":"彩色眼底图片"
     }
-  ]
+]

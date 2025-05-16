@@ -216,7 +216,7 @@ export default function SubmitPage() {
         // event.preventDefault(); // 阻止默认行为
         try{
             // console.log(imgdata)
-            await axios.post('http://localhost:20000/api/submitdata', {data:imgdata})
+            await axios.post('http://26.94.152.103:20000/api/submitdata', {data:imgdata})
         }
         catch (error) {
             console.error('Error submitting data:', error);

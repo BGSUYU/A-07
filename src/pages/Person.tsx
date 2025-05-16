@@ -68,7 +68,7 @@ export default function Person(){
     const ShowLogin = useContext(tag);
     async function download() {
         try{
-            const response = await axios.get('http://localhost:20000/api/downloadfile',{
+            const response = await axios.get('http://26.94.152.103:20000/api/downloadfile',{
                 responseType: 'blob', // Set the response type to 'blob'
             })
             const blob = new Blob([response.data], { type: 'application/octet-stream' });
@@ -102,31 +102,31 @@ export default function Person(){
         marginTop:'10px',
     }
     const [isdata,setdata] = useState([
-        {
-            key: '1',
-            label: '测试编号：1',
-            children: <PersonChildren dataEyes={data[0]} numberEyes="1" typeOfEyes="正常" imgEyes='/1.png' imageEyes="彩色眼底图片"/>,
-          },
-          {
-            key: '2',
-            label: '测试编号：4338',
-            children: <PersonChildren dataEyes={data[1]} numberEyes="4338" typeOfEyes="糖尿病" imgEyes='/305.jpg' imageEyes="彩色眼底图片"/>,
-          },
-          {
-            key: '3',
-            label: '测试编号：305',
-            children: <PersonChildren dataEyes={data[2]} numberEyes="305" typeOfEyes="糖尿病、高血压、其他疾病/异常" imgEyes='/4338.png' imageEyes="彩色眼底图片"/>,
-          },
-          {
-            key: '4',
-            label: '测试编号：4401',
-            children:<PersonChildrenOCT dataEyes={dataOCT[0]} numberEyes="4401" typeOfEyes="Normal" imgEyes='/4401.png' imageEyes="OCT图片"/>,
-          },
-          {
-              key: '5',
-              label: '测试编号：5573',
-              children:<PersonChildrenOCT dataEyes={dataOCT[1]} numberEyes="5573" typeOfEyes="Diabetic retinopathy" imgEyes='/5573.png' imageEyes="OCT图片"/>,
-          },
+        // {
+        //     key: '1',
+        //     label: '测试编号：1',
+        //     children: <PersonChildren dataEyes={data[0]} numberEyes="1" typeOfEyes="正常" imgEyes='/1.png' imageEyes="彩色眼底图片"/>,
+        //   },
+        //   {
+        //     key: '2',
+        //     label: '测试编号：4338',
+        //     children: <PersonChildren dataEyes={data[1]} numberEyes="4338" typeOfEyes="糖尿病" imgEyes='/305.jpg' imageEyes="彩色眼底图片"/>,
+        //   },
+        //   {
+        //     key: '3',
+        //     label: '测试编号：305',
+        //     children: <PersonChildren dataEyes={data[2]} numberEyes="305" typeOfEyes="糖尿病、高血压、其他疾病/异常" imgEyes='/4338.png' imageEyes="彩色眼底图片"/>,
+        //   },
+        //   {
+        //     key: '4',
+        //     label: '测试编号：4401',
+        //     children:<PersonChildrenOCT dataEyes={dataOCT[0]} numberEyes="4401" typeOfEyes="Normal" imgEyes='/4401.png' imageEyes="OCT图片"/>,
+        //   },
+        //   {
+        //       key: '5',
+        //       label: '测试编号：5573',
+        //       children:<PersonChildrenOCT dataEyes={dataOCT[1]} numberEyes="5573" typeOfEyes="Diabetic retinopathy" imgEyes='/5573.png' imageEyes="OCT图片"/>,
+        //   },
         // key:'',
         // label:'',
         // children:<></>, // Initialize with an empty ReactNode
@@ -150,7 +150,7 @@ export default function Person(){
                 ),
             }));
 
-            setdata([...isdata, ...newItems])
+            setdata(newItems)
             
             console.log(dataJSON[0].key);
         })

@@ -2,12 +2,13 @@ import express from 'express'
 import cors from 'cors'
 import AIchat from './AIchat.js'
 import {insertphotomessage} from './db.js'
-import { register } from './register.js'
+import register from './register.js'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { login } from './login.js'
+import { getCommentMessage , Insertcomment } from './comment.js'
 const server = express();
 const PORT = 20000;
 
@@ -54,8 +55,20 @@ server.post('/api/login',async(req,res)=>{
     res.json({token})
 })
 
-server.get('/api/getdata',async(req,res)=>{
-    
+server.post('/api/submitcomment',async(req,res)=>{
+    const {comment} = req.body;
+    console.log(`Received data: Comment = ${comment}`);
+    await Insertcomment(comment)
+    .catch((err)=>{
+        console.log(err)
+        res.status(500).json({error:'评论失败'})
+    })
+    res.json({ message: '评论成功' });
+})
+
+server.get('/api/getComment',async(req,res)=>{
+    const Comment = await getCommentMessage();
+    res.json(Comment);
 })
 
 // server.get(('/api/data', async (req, res) => {

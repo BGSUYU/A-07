@@ -3,7 +3,7 @@ import fs_SQL from './SQL/fs_SQL.js'
 
 const db = mysql2.createPool({
     connectionLimit:10,
-    host: 'localhost',
+    host: '26.94.152.103',
     user: 'root',
     password: '535462',
     database: 'A07',
@@ -83,6 +83,48 @@ export async function checkusermessage(username){
             return result;
         });
         connect.release();
+    }
+    catch(err){
+        console.error('查询失败',err);
+    }
+}
+
+export async function SaveComment(Comment) {
+    try{
+        const connect = await getConnection();
+        const sql_insert = await fs_SQL('./SQL/INSERTCOMMENT.sql');
+        connect.query(sql_insert,[Comment],(err, result) => {
+            if(err){
+                console.log(err,'插入失败');
+            }
+            else{
+                console.log(result);
+                console.log('插入成功');
+            }
+        });
+        connect.release();
+    }
+    catch(err){
+        console.error('插入失败',err);
+    }
+}
+
+export async function getComment() {
+    try{
+        const connect = await getConnection();
+        const sql_select = await fs_SQL('./SQL/SELECTCOMMENT.sql');
+        return new Promise ((resolve,reject)=>{connect.query(sql_select,(err, result) => {
+                if(err){
+                    console.log(err,'查询失败');
+                }
+                else{
+                    console.log(result);
+                    console.log('查询成功');
+                    resolve(result);
+                }
+            });
+            connect.release();
+        })
     }
     catch(err){
         console.error('查询失败',err);

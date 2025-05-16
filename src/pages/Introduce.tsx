@@ -1,12 +1,14 @@
 import { Button, Flex, List ,Input} from "antd"
 import Nav from "../components/Nav"
-import React, { useContext, useState } from "react";
+import React, { Children, useContext, useEffect, useState } from "react";
 import {ChildButtoncx,ChildButtonxm} from "../components/ChildButton";
 import { Color } from "antd/es/color-picker";
 import ChildIntroduce from "../components/ChildIntroduce";
 import RegisterForm from "../components/Register";
 import LoginForm from '../components/Login';
 import {tag} from "../App"
+import axios from "axios";
+import { C } from "ollama/dist/shared/ollama.f6b57f53";
 
 export default function Introduce() {
     const ShowRegister = useContext(tag);
@@ -71,6 +73,42 @@ export default function Introduce() {
         cursor:'pointer',
         transition:'background-color 1s ease,color 1s ease'
     }
+    const [isComment, setComment] = useState('');
+    function handleComment(e:React.ChangeEvent<HTMLTextAreaElement>){
+        const form = e.target;
+        const comment = form.value;
+        setComment(comment);
+        
+        // console.log(comment);
+        // console.log(isComment);
+    }
+    function ClearComment(){
+        axios.post('http://26.94.152.103:20000/api/submitcomment', {
+            comment: isComment,
+        })
+        setComment('');
+        setRendering(true);
+    }
+
+    const [getisComment, setGetComment] = useState([]);
+    const [isRendering,setRendering]= useState(false);
+    useEffect(() => {
+        axios.get('http://26.94.152.103:20000/api/getcomment')
+        .then((response) => {
+                const CommentMessage = JSON.parse(response.data.body);
+                // console.log(CommentMessage.data[0]);
+                const Items = CommentMessage.data.map((item: { key:number,comment: string; }) => ({
+                    id: item.key-1,
+                    comment: item.comment,
+                    children:(
+                        <CommentFrom comment={item.comment} />
+                    )
+                })
+            );                
+            setGetComment(Items);
+            setRendering(false);
+        })
+    },[isRendering])
     return(
         <div>
             {ShowRegister?.IsShowRegister ? <RegisterForm /> : <></>}
@@ -146,9 +184,60 @@ export default function Introduce() {
                 <div style={{
                     marginBottom: "50px",
                 }}>
-                    <TextArea placeholder="留下你的评论吧" rows={4}/>
+                    <TextArea 
+                    onPressEnter={                                           
+                        ClearComment
+                    }
+                    onChange={
+                        (e)=>{
+                            handleComment(e)
+                        }
+                    }  
+                    value={isComment} placeholder="留下你的评论吧" rows={4}/>
+                </div>
+                <div>
+                    <CommentList comments={getisComment} />
                 </div>
             </div>
         </div>
     )
+}
+
+interface CommentProps {
+    comment: string;
+}
+
+function CommentFrom(props:CommentProps){
+    return (
+        <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '10px',
+            borderBottom: '1px solid #ccc',
+            backgroundColor: '#f9f9f9',
+            borderRadius: '5px',
+            marginBottom: '10px',
+        }}>
+            {props.comment}
+        </div>
+    )
+}
+
+interface CommentListProps {
+    comments: { id: number; children: React.ReactNode }[];
+}
+
+function CommentList({ comments }: CommentListProps) {
+    return (
+        <div>
+            {
+                comments.map((item) => (
+                    <div key={item.id}>
+                        {item.children}
+                    </div>
+                ))
+            }
+        </div>
+    );
 }

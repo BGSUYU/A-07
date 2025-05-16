@@ -50,7 +50,7 @@ export default function AI(){
     const [agent] = useXAgent({
         request: async ({ message }, { onSuccess, onUpdate }) => {
 
-        await axios.post('http://localhost:20000/api/submit', {content:message})
+        await axios.post('http://26.94.152.103:20000/api/submit', {content:message})
         .then(response => {
             const fullContent=response.data.message;
             let currentContent = '';

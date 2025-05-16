@@ -44,7 +44,7 @@ export default function LoginForm(){
     // console.log(isMessage);
     // };
     async function PutUserMessage() {
-        fetch('http://localhost:20000/api/Login', {
+        fetch('http://26.94.152.103:20000/api/Login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -112,6 +112,7 @@ export default function ChildIntroduce(props:ChildIntroduceProps) {
 
     return (
         <div style={{ 
+            zIndex: '2',
             display: 'flex', 
             justifyContent: 'center', 
             alignItems: 'center',
@@ -125,6 +126,8 @@ export default function ChildIntroduce(props:ChildIntroduceProps) {
                     display: 'flex',
                     flexDirection: 'column',
                     // justifyContent: 'center',
+                    position: 'sticky',
+                    top: '100px',
                     alignItems: 'center',
                     height: '360px',
                     padding: '30px',
